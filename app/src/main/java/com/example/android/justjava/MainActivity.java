@@ -2,9 +2,16 @@ package com.example.android.justjava;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import java.text.NumberFormat;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,22 +40,70 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayQuantity(int numberOfCoffees) {
-        TextView quantityTextView = findViewById(
-                R.id.quantity_text_view);
+        TextView quantityTextView = findViewById(R.id.quantity_text_view);
         quantityTextView.setText("" + numberOfCoffees);
     }
 
-    private void displayMessage(String message) {
-        TextView priceTextView = findViewById(R.id.price_text_view);
-        priceTextView.setText(message);
+    private int calculatePrice(boolean addWhippedCream, boolean addChocolate) {
+        int basePrice = 5;
+
+
+        if (addWhippedCream) {
+            basePrice = basePrice + 1;
+        }
+
+
+        if (addChocolate) {
+            basePrice = basePrice + 2;
+        }
+
+
+        return quantity * basePrice;
+    }
+
+    private String createOrderSummary(String name, int price, boolean addWhippedCream,
+                                      boolean addChocolate) {
+        String priceMessage = getString(R.string.order_summary_name, name);
+        priceMessage += "\n" + getString(R.string.order_summary_whipped_cream, addWhippedCream);
+        priceMessage += "\n" + getString(R.string.order_summary_chocolate, addChocolate);
+        priceMessage += "\n" + getString(R.string.order_summary_quantity, quantity);
+        priceMessage += "\n" + getString(R.string.order_summary_price,
+                NumberFormat.getCurrencyInstance().format(price));
+        priceMessage += "\n" + getString(R.string.thank_you);
+        return priceMessage;
     }
 
 
     public void submitOrder(View view) {
-        int price = quantity * 5;
-        String priceMessage = "Total: $" + price;
-        priceMessage = priceMessage + "\nThank you!";
-        displayMessage(priceMessage);
+
+        EditText nameField = findViewById(R.id.name_field);
+        Editable nameEditable = nameField.getText();
+        String name = nameEditable.toString();
+
+        CheckBox whippedCreamCB = findViewById(R.id.whipped_cream_checkbox);
+        CheckBox chocolateCB = findViewById(R.id.chocolate_checkbox);
+
+        boolean hasWhippedCream = whippedCreamCB.isChecked();
+        boolean hasChocolate = chocolateCB.isChecked();
+
+        int price = calculatePrice(hasWhippedCream, hasChocolate);
+
+        String summary = createOrderSummary(name, price, hasWhippedCream, hasChocolate);
+
+        TextView priceView = findViewById(R.id.price_text_view);
+        priceView.setText(summary);
+
+
+        //email intent
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT,
+                getString(R.string.order_summary_email_subject, name));
+        intent.putExtra(Intent.EXTRA_TEXT, summary);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
 }

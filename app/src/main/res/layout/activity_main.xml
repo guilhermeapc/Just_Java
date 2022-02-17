@@ -53,9 +53,9 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btn_decrement"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:onClick="decrement"
             android:layout_margin="5dp"
             android:text="@string/minus" />
 
@@ -71,9 +71,9 @@
             android:textSize="16sp" />
 
         <Button
+            android:id="@+id/btn_increment"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:onClick="increment"
             android:layout_margin="5dp"
             android:text="@string/plus" />
 
@@ -96,9 +96,9 @@
         android:textSize="16sp" />
 
     <Button
+        android:id="@+id/btn_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="submitOrder"
         android:layout_margin="5dp"
         android:text="@string/order_button" />
 

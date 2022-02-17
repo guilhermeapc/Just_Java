@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,15 +16,32 @@ import java.text.NumberFormat;
 
 
 public class MainActivity extends AppCompatActivity {
+
     int quantity = 0;
+
+    private final View.OnClickListener incrementListener = v -> increment();
+    private final View.OnClickListener decrementListener = v -> decrement();
+
+    private final View.OnClickListener submitListener = v -> submitOrder();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button incrementButton = findViewById(R.id.btn_increment);
+        Button decrementButton = findViewById(R.id.btn_decrement);
+
+        Button submitButton = findViewById(R.id.btn_submit);
+
+        incrementButton.setOnClickListener(incrementListener);
+        decrementButton.setOnClickListener(decrementListener);
+        submitButton.setOnClickListener(submitListener);
+
     }
 
-    public void increment(View view) {
+    public void increment() {
         if (quantity == 100) {
             return;
         }
@@ -31,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         displayQuantity(quantity);
     }
 
-    public void decrement(View view) {
+    public void decrement() {
         if (quantity == 0) {
             return;
         }
@@ -74,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void submitOrder(View view) {
+    public void submitOrder() {
 
         EditText nameField = findViewById(R.id.name_field);
         Editable nameEditable = nameField.getText();
